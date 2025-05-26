@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const cors = require('cors');
 const bodyParser = require("body-parser");
+require('dotenv').config();
 
 const app = express();
-const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 );
 const upload = multer({ storage: storage });
 
-mongoose.connect("mongodb://127.0.0.1:27017/ciel_db");
+mongoose.connect(process.env.MONGO_URL);
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -316,6 +316,6 @@ app.post('/comment_product/:id',async (req,res)=>{
 })
 
 
-server.listen(5000, () => {
-  console.log(`Server is running on http://localhost:5000`);
+server.listen(process.env.PORT, () => {
+  console.log(`Server is running on ${process.env.PORT}`);
 });
