@@ -103,6 +103,8 @@ const Forum = mongoose.model('Forum',forumSchema);
 const ForumTopic = mongoose.model('ForumTopic',forumtopicschema);
 const Product = mongoose.model('Product',productschema)
 
+app.use('/api/auth', router);
+
 app.get('/', async (req, res) => {
   res.json({message:"hello backend"})
 });
