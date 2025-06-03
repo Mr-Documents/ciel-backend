@@ -39,9 +39,9 @@ export const logoutUser = (req, res, next) => {
   });
 };
 
-export const getSecrets = (req, res) => {
+export const getDashboard = (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({ secret: "Here is the secret content." });
+    res.json({ secret: "Welcome to the Dashboard." });
   } else {
     res.status(401).json({ error: "Unauthorized" });
   }

@@ -5,7 +5,7 @@ import {
   registerUser,
   loginSuccess,
   logoutUser,
-  getSecrets,
+  getDashboard,
 } from "../controllers/authenticationcontroller.js";
 
 const router = express.Router();
@@ -18,15 +18,15 @@ router.post("/login", passport.authenticate("local"), loginSuccess);
 
 router.get("/logout", logoutUser);
 
-router.get("/secrets", getSecrets);
+router.get("/dashboard", getDashboard);
 
 // Google OAuth
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
-  "/auth/google/secrets",
+  "/auth/google/dashboard",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:5173/secrets",
+    successRedirect: "http://localhost:5173/dashboard",
     failureRedirect: "http://localhost:5173/login",
   })
 );
