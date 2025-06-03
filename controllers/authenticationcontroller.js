@@ -2,48 +2,48 @@ import mongoose from "mongoose";
 import User from "../models/users.js";
 
 
-export const getsignup = (req, res) => {}
-  
+import bcrypt from "bcrypt";
+import User from "../models/User.js";
 
+const saltRounds = 10;
 
-export const getlogin = (req, res) =>{
-    res.json({
-        message: "login endpoint get",
-    });
-}
+export const registerUser = async (req, res) => {
+  const { username: email, password } = req.body;
+  const existingUser = await User.findOne({ email });
 
+  if (existingUser) {
+    return res.status(400).json({ message: "User already exists" });
+  }
 
-    export const postsignup = async (req, res) =>{
-        const { username, password } = req.body;
-       
   try {
-    const existingUser = await User.findOne({ email: username });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
-
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const user = await User.create({ email: username, password: hashedPassword });
-
-    req.login(user, err => {
-      if (err) return res.status(500).json({ message: "Login failed" });
-      res.status(201).json({ message: "Registered and logged in" });
+    const hash = await bcrypt.hash(password, saltRounds);
+    const newUser = new User({ email, password: hash });
+    await newUser.save();
+    req.login(newUser, (err) => {
+      if (err) return res.status(500).json({ error: "Login error" });
+      return res.json({ message: "Registration successful" });
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
-    
-    export const postlogin = (req, res) =>{
-        res.json({
-            message: "login endpoint post",
-        });
+export const loginSuccess = (req, res) => {
+  res.json({ message: "Login successful" });
+};
 
+export const logoutUser = (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.json({ message: "Logged out" });
+  });
+};
 
+export const getSecrets = (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ secret: "Here is the secret content." });
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+};
 
-
-}
-export const logout = (req, res) =>{
-    res.json({
-        message: "logout endpoint",
-    });
-}

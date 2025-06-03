@@ -5,6 +5,15 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 require('dotenv').config();
 
+
+
+const session = require("express-session");
+const passport = require("passport");
+const dotenv = require("dotenv");
+require("./config/passport");
+const authRoutes = require("./AuthRoute/authentication");
+
+
 const app = express();
 
 app.use(cors());
@@ -27,9 +36,39 @@ const storage = multer.diskStorage({
 );
 const upload = multer({ storage: storage });
 
+//Sessions with cookies and the OAuth initializing code.
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/", authRoutes);
+
+dotenv.config();
+
+
 mongoose.connect(process.env.MONGO_URL);
 
-const userSchema = new mongoose.Schema({
+
+
+
+
+
+
+
+
+
+
+//Models
+
+  const userSchema = new mongoose.Schema({
   name: String,
   password: String,
   bio: String,
@@ -102,6 +141,18 @@ const Chat = mongoose.model('Chat',chatSchema);
 const Forum = mongoose.model('Forum',forumSchema);
 const ForumTopic = mongoose.model('ForumTopic',forumtopicschema);
 const Product = mongoose.model('Product',productschema)
+
+
+
+
+
+
+
+
+
+
+
+//Routes
 
 app.use('/api/auth', router);
 

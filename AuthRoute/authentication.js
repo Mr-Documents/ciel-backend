@@ -1,15 +1,34 @@
 import express from "express";
-import { signup } from "../controllers/authenticationcontroller.js"
-import { login } from "../controllers/authenticationcontroller.js"
-import { logout } from "../controllers/authenticationcontroller.js"
+
+import passport from "passport";
+import {
+  registerUser,
+  loginSuccess,
+  logoutUser,
+  getSecrets,
+} from "../controllers/authenticationcontroller.js";
 
 const router = express.Router();
 
-router.get("/signup", signup);
+router.get("/", (req, res) => res.json({ message: "API root" }));
 
-router.get("/login", login);
+router.post("/register", registerUser);
 
-router.get("/logout", logout);
+router.post("/login", passport.authenticate("local"), loginSuccess);
 
+router.get("/logout", logoutUser);
 
-export default router
+router.get("/secrets", getSecrets);
+
+// Google OAuth
+router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
+router.get(
+  "/auth/google/secrets",
+  passport.authenticate("google", {
+    successRedirect: "http://localhost:5173/secrets",
+    failureRedirect: "http://localhost:5173/login",
+  })
+);
+
+export default router;
