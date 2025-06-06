@@ -11,7 +11,7 @@ const session = require("express-session");
 const passport = require("passport");
 const dotenv = require("dotenv");
 require("./config/passport");
-const authRoutes = require("./AuthRoute/authentication");
+const authRoutes = require("./AuthRoute/authentication.mjs");
 
 
 const app = express();

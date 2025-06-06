@@ -6,7 +6,7 @@ import {
   loginSuccess,
   logoutUser,
   getDashboard,
-} from "../controllers/authenticationcontroller.js";
+} from "../controllers/authenticationcontroller.mjs";
 
 const router = express.Router();
 
